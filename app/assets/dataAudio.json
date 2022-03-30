@@ -1,0 +1,59 @@
+[{
+    "lion": {
+        "default": {
+            "image": "lion.webp",
+            "audio": "lion.mp3" 
+        },
+        "cub": {
+            "image": "lion_cub.webp",
+            "audio": "lion_cub.mp3" 
+        },
+        "roar": {
+            "image": "lion_roar.webp",
+            "audio": "lion_roar.mp3" 
+        }
+    },
+    "mouse":{
+        "default": {
+            "image": "mouse.webp",
+            "audio": "mouse.mp3" 
+        },
+        "squeak": {
+            "image": "mouse_squeek.webp",
+            "audio": "mouse_squeek.mp3" 
+        },
+        "run": {
+            "image": "mouse_run.webp",
+            "audio": "mouse_run.mp3" 
+        }
+    },
+    "hippo": {
+        "default": {
+            "image": "hippo.webp",
+            "audio": "hippo.mp3" 
+        },
+        "fart": {
+            "image": "hippo_fart.webp",
+            "audio": "hippo_fart.mp3" 
+        }
+    },
+    "cow":{
+        "default": {
+            "image": "cow.webp",
+            "audio": "cow.mp3" 
+        }
+    },
+    "cat":{
+        "default": {
+            "image": "cat.webp",
+            "audio": "cat.mp3" 
+        }
+    },
+    "dog":{
+        "default": {
+            "image": "dog.webp",
+            "audio": "dog.mp3" 
+        }
+    }
+  }
+]

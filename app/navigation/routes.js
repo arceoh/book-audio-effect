@@ -1,0 +1,15 @@
+export default Object.freeze({
+    ADD_NEW_BOOK: 'Add New Book',
+    BOOK_DETAILS: 'Book Details',
+    BARCODE_SCANNER: 'Barcode Scanner',
+    CAMERA_VIEW: 'Camera View',
+    CAMERA_PREVIEW: 'Camera View',
+    FAVORITES: 'Favorites',
+    LOGIN: 'Login',
+    PAGE_BUILDER: 'Page Builder',
+    REGISTER: 'Register',
+    SEARCH_FOR_A_BOOK: 'Search for a Book',
+    SETTINGS: 'Settings',
+    HOME_PAGE: 'Search',
+    SPLASH_SCREEN: 'Splash',
+})
