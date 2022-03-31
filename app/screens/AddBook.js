@@ -165,11 +165,35 @@ function AddBook({ navigation, route }) {
                 try {
                     const response = await getBookFromBarcode(scannedBarCode)
                     if (isActive) {
+                        console.log('Test')
+                        let bookTitle = ''
+                        let bootkAuthor = ''
+                        let bookImgSrc = ''
+
+                        if (response.data.items[0].volumeInfo.hasOwnProperty('title')) {
+                            console.log('TITLE: ', response.data.items[0].volumeInfo.title)
+                            bookTitle = response.data.items[0].volumeInfo.title
+                        }
+                        if (response.data.items[0].volumeInfo.hasOwnProperty('authors')) {
+                            console.log('AUTHORS: ', response.data.items[0].volumeInfo.authors)
+                            bootkAuthor = response.data.items[0].volumeInfo.authors
+                        }
+                        if (response.data.items[0].volumeInfo.hasOwnProperty('imageLinks')) {
+                            if (
+                                response.data.items[0].volumeInfo.imageLinks.hasOwnProperty(
+                                    'smallThumbnail'
+                                )
+                            ) {
+                                console.log('IMGS: ', response.data.items[0].volumeInfo.imageLinks)
+                                bookImgSrc =
+                                    response.data.items[0].volumeInfo.imageLinks.smallThumbnail
+                            }
+                        }
                         setBookData({
                             ...bookData,
-                            title: response.data.items[0].volumeInfo.title,
-                            authors: response.data.items[0].volumeInfo.authors,
-                            imageSrc: response.data.items[0].volumeInfo.imageLinks.smallThumbnail,
+                            title: bookTitle,
+                            authors: bootkAuthor,
+                            imageSrc: bookImgSrc,
                         })
                     }
                 } catch (e) {}
@@ -348,7 +372,7 @@ function AddBook({ navigation, route }) {
 
                     <TouchableWithoutFeedback onPress={selectImage}>
                         <View style={styles.coverImageContainer}>
-                            {coverImage === null && (
+                            {bookData.imageSrc === '' && (
                                 <View style={styles.cameraIcon}>
                                     <MaterialCommunityIcons
                                         name={'file-image'}
@@ -357,8 +381,11 @@ function AddBook({ navigation, route }) {
                                     />
                                 </View>
                             )}
-                            {coverImage && (
-                                <Image style={styles.coverImage} source={{ uri: coverImage }} />
+                            {bookData.imageSrc != '' && (
+                                <Image
+                                    style={styles.coverImage}
+                                    source={{ uri: bookData.imageSrc }}
+                                />
                             )}
                         </View>
                     </TouchableWithoutFeedback>
