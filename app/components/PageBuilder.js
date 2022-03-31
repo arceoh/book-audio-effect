@@ -71,6 +71,11 @@ function PageBuilder({ navigation, route }) {
             if (typeof route.params.pageNumber !== 'undefined') {
                 setPageNumber(route.params.pageNumber)
             }
+            if (typeof route.params.audioFilesList !== 'undefined') {
+                const passedAudioFilesList = route.params.audioFilesList
+                console.log('PASSED: ', passedAudioFilesList)
+                setAudioFilesList(passedAudioFilesList)
+            }
         }
     }
     const renderAudioItems = ({ item, index }) => {

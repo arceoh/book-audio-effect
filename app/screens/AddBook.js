@@ -15,6 +15,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { useFocusEffect } from '@react-navigation/native'
 import { Formik } from 'formik'
 import * as Firebase from '../api/firebase'
+import RNBounceable from '@freakycoder/react-native-bounceable'
 
 import getBookFromBarcode from '../api/getBookFromBarCode'
 import Screen from '../components/Screen'
@@ -152,6 +153,7 @@ function AddBook({ navigation, route }) {
         if (isFocused) {
             loadBarCode()
             updatePageList()
+            console.log('PageList:', pageList)
         }
     }, [isFocused])
 
@@ -197,6 +199,7 @@ function AddBook({ navigation, route }) {
                 newPageList[route.params.pageNumber - 1] = route.params.audioFilesList
 
                 setPageList(newPageList)
+                setNumberOfPages(pageList.length)
             } else {
                 console.log('No update needed')
             }
@@ -260,46 +263,56 @@ function AddBook({ navigation, route }) {
 
     const renderPages = ({ item, index }) => {
         return (
-            <View style={[styles.coverImageContainer, { marginHorizontal: 5 }]}>
-                <View style={styles.cameraIcon}>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            color: colors.medium,
-                            textAlign: 'center',
-                            paddingBottom: 0,
-                            marginBottom: 0,
-                            lineHeight: 12,
-                        }}
-                    >
-                        PAGE #
-                    </Text>
-                    <Text
-                        style={{
-                            paddingTop: 0,
-                            marginTop: 0,
-                            fontSize: 40,
-                            fontFamily: 'sans-serif-medium',
-                            color: colors.medium,
-                            textAlign: 'center',
-                        }}
-                    >
-                        {index}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 9,
-                            color: colors.medium,
-                            textAlign: 'center',
-                            paddingBottom: 0,
-                            marginBottom: 0,
-                            lineHeight: 12,
-                        }}
-                    >
-                        Click to Edit
-                    </Text>
+            <RNBounceable
+                onPress={() =>
+                    navigation.navigate(routes.PAGE_BUILDER, {
+                        goBack: route.name,
+                        pageNumber: index,
+                        audioFilesList: pageList[index],
+                    })
+                }
+            >
+                <View style={[styles.coverImageContainer, { marginHorizontal: 5 }]}>
+                    <View style={styles.cameraIcon}>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                color: colors.medium,
+                                textAlign: 'center',
+                                paddingBottom: 0,
+                                marginBottom: 0,
+                                lineHeight: 12,
+                            }}
+                        >
+                            PAGE #
+                        </Text>
+                        <Text
+                            style={{
+                                paddingTop: 0,
+                                marginTop: 0,
+                                fontSize: 40,
+                                fontFamily: 'sans-serif-medium',
+                                color: colors.medium,
+                                textAlign: 'center',
+                            }}
+                        >
+                            {index}
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: 9,
+                                color: colors.medium,
+                                textAlign: 'center',
+                                paddingBottom: 0,
+                                marginBottom: 0,
+                                lineHeight: 12,
+                            }}
+                        >
+                            Click to Edit
+                        </Text>
+                    </View>
                 </View>
-            </View>
+            </RNBounceable>
         )
     }
 
@@ -389,7 +402,7 @@ function AddBook({ navigation, route }) {
                                             borderRadius: 5,
                                         }}
                                     >
-                                        <TouchableWithoutFeedback
+                                        <RNBounceable
                                             onPress={() =>
                                                 navigation.navigate(routes.PAGE_BUILDER, {
                                                     goBack: route.name,
@@ -406,10 +419,10 @@ function AddBook({ navigation, route }) {
                                                     />
                                                 </View>
                                             </View>
-                                        </TouchableWithoutFeedback>
+                                        </RNBounceable>
                                     </View>
                                     <FlatList
-                                        data={testData}
+                                        data={pageList}
                                         renderItem={renderPages}
                                         keyExtractor={(item, index) => index}
                                         horizontal={true}
@@ -439,6 +452,12 @@ function AddBook({ navigation, route }) {
 
                     <View style={{ marginTop: 20 }}>
                         <Button onPress={() => clearForm()} title="Clear" />
+                    </View>
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            onPress={() => console.log('PageList:', pageList)}
+                            title="Log Page List"
+                        />
                     </View>
                 </View>
             </ScrollView>
