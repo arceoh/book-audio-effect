@@ -8,12 +8,16 @@ import { useQuery } from '@apollo/client'
 import colors from '../config/colors'
 import capitalizeFirstLetter from '../utils/toUpperFist'
 import { ListItemSeparator } from './lists'
+import routes from '../navigation/routes'
 import Screen from './Screen'
+import { useIsFocused } from '@react-navigation/native'
 
-function PageBuilder(props) {
+function PageBuilder({ navigation, route }) {
     const [seachByCategoryName, setSeachByCategoryName] = useState('')
     const [currentCategoryName, setCurrentCategoryName] = useState('')
     const [audioFilesList, setAudioFilesList] = useState([])
+    const [pageNumber, setPageNumber] = useState(null)
+    const isFocused = useIsFocused()
 
     const {
         loading: audioLoading,
@@ -36,15 +40,21 @@ function PageBuilder(props) {
         if (typeof categoriesError !== 'undefined') {
             console.log('Error: ', categoriesError)
         }
+
+        if (isFocused) {
+            loadPassedAudioFilesList()
+        }
+
+        // console.log(route.params)
         // console.log(audioData)
-        console.log(audioFilesList)
+        // console.log(audioFilesList)
         // console.log(
         //     'audioFilesList: ',
         //     audioFilesList.map((item) => `${item.title}`)
         // )
         // console.log(categoriesData.categories.edges)
         setSeachByCategoryName(currentCategoryName)
-    }, [audioData, audioFilesList, categoriesData, currentCategoryName])
+    }, [isFocused, audioData, audioFilesList, categoriesData, currentCategoryName])
 
     const handleAudioFilesList = (isChecked, item) => {
         let newArray = [...audioFilesList]
@@ -56,7 +66,13 @@ function PageBuilder(props) {
         }
         setAudioFilesList(newArray)
     }
-
+    const loadPassedAudioFilesList = () => {
+        if (typeof route.params !== 'undefined') {
+            if (typeof route.params.pageNumber !== 'undefined') {
+                setPageNumber(route.params.pageNumber)
+            }
+        }
+    }
     const renderAudioItems = ({ item, index }) => {
         const id = item.node.id
         const mediaItemUrl = item.node.mediaItemUrl
@@ -143,7 +159,11 @@ function PageBuilder(props) {
     const renderHeader = () => {
         return (
             <View style={styles.categoriesContainer}>
-                <Text style={{ fontSize: 25, padding: 10 }}>List of Categories</Text>
+                <Text
+                    style={{ fontSize: 25, padding: 10, fontWeight: 'bold', textAlign: 'center' }}
+                >
+                    Page {pageNumber}
+                </Text>
                 {categoriesLoading && (
                     <View style={{ padding: 10, height: 1, backgroundColor: '#efefef' }}></View>
                 )}
@@ -186,6 +206,27 @@ function PageBuilder(props) {
                         }}
                     >
                         Log
+                    </Text>
+                </TouchableWithoutFeedback>
+            </View>
+            <View>
+                <TouchableWithoutFeedback
+                    onPress={() =>
+                        navigation.navigate(routes.ADD_NEW_BOOK, {
+                            pageNumber,
+                            audioFilesList,
+                        })
+                    }
+                >
+                    <Text
+                        style={{
+                            padding: 15,
+                            margin: 10,
+                            backgroundColor: colors.light,
+                            textAlign: 'center',
+                        }}
+                    >
+                        Save
                     </Text>
                 </TouchableWithoutFeedback>
             </View>

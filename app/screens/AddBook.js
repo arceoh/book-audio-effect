@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
     Button,
     Image,
+    FlatList,
     View,
     StyleSheet,
     Text,
@@ -21,6 +22,119 @@ import TextInput from '../components/TextInput'
 import routes from '../navigation/routes'
 import colors from '../config/colors'
 
+const testData = [
+    [
+        {
+            id: 'cG9zdDo3NQ==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/hippo.mp3',
+            title: 'hippo',
+        },
+        {
+            id: 'cG9zdDo3Mw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/cat.mp3',
+            title: 'cat',
+        },
+        {
+            id: 'cG9zdDo3Ng==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/mouse.mp3',
+            title: 'mouse',
+        },
+        {
+            id: 'cG9zdDo3Nw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/lion.mp3',
+            title: 'lion',
+        },
+    ],
+    [
+        {
+            id: 'cG9zdDo3NQ==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/hippo.mp3',
+            title: 'hippo',
+        },
+        {
+            id: 'cG9zdDo3Mw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/cat.mp3',
+            title: 'cat',
+        },
+        {
+            id: 'cG9zdDo3Ng==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/mouse.mp3',
+            title: 'mouse',
+        },
+        {
+            id: 'cG9zdDo3Nw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/lion.mp3',
+            title: 'lion',
+        },
+    ],
+    [
+        {
+            id: 'cG9zdDo3NQ==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/hippo.mp3',
+            title: 'hippo',
+        },
+        {
+            id: 'cG9zdDo3Mw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/cat.mp3',
+            title: 'cat',
+        },
+        {
+            id: 'cG9zdDo3Ng==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/mouse.mp3',
+            title: 'mouse',
+        },
+        {
+            id: 'cG9zdDo3Nw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/lion.mp3',
+            title: 'lion',
+        },
+    ],
+    [
+        {
+            id: 'cG9zdDo3NQ==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/hippo.mp3',
+            title: 'hippo',
+        },
+        {
+            id: 'cG9zdDo3Mw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/cat.mp3',
+            title: 'cat',
+        },
+        {
+            id: 'cG9zdDo3Ng==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/mouse.mp3',
+            title: 'mouse',
+        },
+        {
+            id: 'cG9zdDo3Nw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/lion.mp3',
+            title: 'lion',
+        },
+    ],
+    [
+        {
+            id: 'cG9zdDo3NQ==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/hippo.mp3',
+            title: 'hippo',
+        },
+        {
+            id: 'cG9zdDo3Mw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/cat.mp3',
+            title: 'cat',
+        },
+        {
+            id: 'cG9zdDo3Ng==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/mouse.mp3',
+            title: 'mouse',
+        },
+        {
+            id: 'cG9zdDo3Nw==',
+            mediaItemUrl: 'https://scweb.dev/wp-content/uploads/2022/03/lion.mp3',
+            title: 'lion',
+        },
+    ],
+]
+
 function AddBook({ navigation, route }) {
     const [coverImage, setCoverImage] = useState(null)
     const [bookData, setBookData] = useState({ title: '', authors: [], imageSrc: '' })
@@ -30,9 +144,14 @@ function AddBook({ navigation, route }) {
     const isFocused = useIsFocused()
 
     useEffect(() => {
+        if (typeof route.params !== 'undefined') {
+            console.log(route.params)
+        }
+
         requestPermission()
         if (isFocused) {
             loadBarCode()
+            updatePageList()
         }
     }, [isFocused])
 
@@ -51,9 +170,7 @@ function AddBook({ navigation, route }) {
                             imageSrc: response.data.items[0].volumeInfo.imageLinks.smallThumbnail,
                         })
                     }
-                } catch (e) {
-                    // Handle error
-                }
+                } catch (e) {}
             }
             setTimeout(() => loadBook(), 1000)
 
@@ -67,6 +184,21 @@ function AddBook({ navigation, route }) {
         if (typeof route.params !== 'undefined') {
             if (typeof route.params.barCodeData !== 'undefined') {
                 setScannedBarCode(route.params.barCodeData)
+            }
+        }
+    }
+
+    const updatePageList = () => {
+        if (typeof route.params !== 'undefined') {
+            if (typeof route.params.audioFilesList !== 'undefined') {
+                console.log('Updating Page List')
+                const newPageList = [...pageList]
+
+                newPageList[route.params.pageNumber - 1] = route.params.audioFilesList
+
+                setPageList(newPageList)
+            } else {
+                console.log('No update needed')
             }
         }
     }
@@ -106,12 +238,13 @@ function AddBook({ navigation, route }) {
             console.log('Error reading an image')
         }
     }
+
     const takePhoto = async () => {
         let image = await ImagePicker.launchCameraAsync().catch((error) => console.log({ error }))
     }
 
     const submitForm = (book) => {
-        console.log(book)
+        console.log('Submiting Book: ', book)
         // Firebase.saveBook(book.BarCode, book.title, book.author)
     }
 
@@ -123,6 +256,51 @@ function AddBook({ navigation, route }) {
             imageSrc: '',
         })
         setScannedBarCode('')
+    }
+
+    const renderPages = ({ item, index }) => {
+        return (
+            <View style={[styles.coverImageContainer, { marginHorizontal: 5 }]}>
+                <View style={styles.cameraIcon}>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            color: colors.medium,
+                            textAlign: 'center',
+                            paddingBottom: 0,
+                            marginBottom: 0,
+                            lineHeight: 12,
+                        }}
+                    >
+                        PAGE #
+                    </Text>
+                    <Text
+                        style={{
+                            paddingTop: 0,
+                            marginTop: 0,
+                            fontSize: 40,
+                            fontFamily: 'sans-serif-medium',
+                            color: colors.medium,
+                            textAlign: 'center',
+                        }}
+                    >
+                        {index}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 9,
+                            color: colors.medium,
+                            textAlign: 'center',
+                            paddingBottom: 0,
+                            marginBottom: 0,
+                            lineHeight: 12,
+                        }}
+                    >
+                        Click to Edit
+                    </Text>
+                </View>
+            </View>
+        )
     }
 
     return (
@@ -203,23 +381,39 @@ function AddBook({ navigation, route }) {
                                     value={values.BarCode}
                                 />
                                 <View style={{ flexDirection: 'row' }}>
-                                    <TouchableWithoutFeedback
-                                        onPress={() =>
-                                            navigation.navigate(routes.PAGE_BUILDER, {
-                                                goBack: route.name,
-                                            })
-                                        }
+                                    {/* ADD PAGE AUDIO */}
+                                    <View
+                                        style={{
+                                            backgroundColor: colors.white,
+                                            paddingRight: 5,
+                                            borderRadius: 5,
+                                        }}
                                     >
-                                        <View style={styles.coverImageContainer}>
-                                            <View style={styles.cameraIcon}>
-                                                <MaterialCommunityIcons
-                                                    name={'plus-box'}
-                                                    color={'#303030'}
-                                                    size={45}
-                                                />
+                                        <TouchableWithoutFeedback
+                                            onPress={() =>
+                                                navigation.navigate(routes.PAGE_BUILDER, {
+                                                    goBack: route.name,
+                                                    pageNumber: pageList.length + 1,
+                                                })
+                                            }
+                                        >
+                                            <View style={styles.coverImageContainer}>
+                                                <View style={styles.cameraIcon}>
+                                                    <MaterialCommunityIcons
+                                                        name={'plus-box'}
+                                                        color={'#303030'}
+                                                        size={45}
+                                                    />
+                                                </View>
                                             </View>
-                                        </View>
-                                    </TouchableWithoutFeedback>
+                                        </TouchableWithoutFeedback>
+                                    </View>
+                                    <FlatList
+                                        data={testData}
+                                        renderItem={renderPages}
+                                        keyExtractor={(item, index) => index}
+                                        horizontal={true}
+                                    />
                                     {/* Add Flatlist with pages */}
                                     {/* <TouchableWithoutFeedback
                                         onPress={() => console.log('Adding page')}
